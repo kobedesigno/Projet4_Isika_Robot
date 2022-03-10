@@ -1,53 +1,43 @@
 const mongoose = require('mongoose');
-const Crypto = require('./models/Crypto');
-// const cryptoSchema = new mongoose.Schema({
-//   date: Date,
-//   data: Object
-// });
-// var CryptoSchema = mongoose.model('crypto', cryptoSchema);
+require('dotenv').config();
 
-const cron = require("node-cron");
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+const cryptoSchema = new mongoose.Schema({
+  date: Date,
+  data: Object
+});
+var Crypto = mongoose.model('Crypto', cryptoSchema);
+
+
 const axios = require("axios");
 
 const api = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,BNB,LTC,BNB,EOS,TRX,NEO,ADA,XRP&tsyms=EUR";
 const key = "process.env.KEY_API";
 
+let request = api + key;
+let dateNow = Date.now();
 
-// var mongoose = require('mongoose');
-const uri = "process.env.DATABASE_URL";
-try {
-    mongoose.connect( uri, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
-    console.log("connected"));
-} catch (error) { 
-    console.log("could not connect");    
-}
+axios
+  .get(request)
+  .then((resp) => {
+    console.log("Get crypto data successfull for " + dateNow);
 
-let i = 0;
-cron.schedule("0 * * * *", function () {
-    console.log("Hello, running job API Request ! count : " + ++i);
-  
-      let request = api + key;
-      let dateNow = Date.now();
-  
-      axios
-        .get(request)
-        .then((resp) => {
-          console.log("Get crypto data successfull for " + dateNow);
-  
-          var cryptoDataToSave = new Crypto({
-            date: dateNow,
-            data: resp.data,
-          });
-  
-          cryptoDataToSave.save(function (err, doc) {
-            if (err) return console.error(err);
-            else
-              return console.log("Save crypto data successfully for " + Date.now());
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    var cryptoDataToSave = new Crypto({
+      date: dateNow,
+      data: resp.data,
+    });
+
+    cryptoDataToSave.save(function (err, doc) {
+      if (err) return console.error(err);
+      else
+        return console.log("Save crypto data successfully for " + Date.now());
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
   });
 
-// "0 */1 * * *"
+
