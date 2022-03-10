@@ -23,7 +23,7 @@ try {
 }
 
 let i = 0;
-cron.schedule("* * * * *", function () {
+cron.schedule("0 * * * *", function () {
     console.log("Hello, running job API Request ! count : " + ++i);
   
       let request = api + key;
