@@ -15,7 +15,7 @@ var Crypto = mongoose.model('Crypto', cryptoSchema);
 const axios = require("axios");
 
 const api = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,BNB,LTC,BNB,EOS,TRX,NEO,ADA,XRP&tsyms=EUR";
-const key = "process.env.KEY_API";
+const key = process.env.KEY_API;
 
 let request = api + key;
 let dateNow = Date.now();
