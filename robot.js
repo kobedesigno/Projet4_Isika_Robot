@@ -1,4 +1,66 @@
+const mongoose = require('mongoose');
+require('dotenv').config();
 const axios = require("axios");
+
+// Conncection à la bdd mongodb, via mongoose
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+// Schema mongoose simple pour chaque crypto
+  let cryptoSchema = new mongoose.Schema({
+  date: Date,
+  cryptoName : String,
+  cryptoCurrency : String,
+  type : String,
+  market : String,
+  fromSymbol: String,
+  toSymbol : String,
+  flags : String,
+  price : String,
+  lastUpdatde : Number,
+  median : Number,
+  lastVolume: Number,
+  lastVolumeto : Number,
+  lastTradedid : String,
+  volumeDay : Number,
+  volumeDayTo : Number,
+  volume24Hour : Number,
+  volume24HourTo : Number,
+  openDay : Number,
+  highDay : Number,
+  lowDay : Number,
+  open24Hour : Number,
+  high24Hour : Number,
+  low24Hour : Number,
+  lastMarket : String,
+  volumeHour: Number,
+  volumeHourTo : Number,
+  openHour : Number,
+  highHour : Number,
+  lowHour : Number,
+  topTierVolume24Hour : Number,
+  topTierVolume24HourTo : Number,
+  change24Hour : Number,
+  change24PCT24Hour : Number,
+  changeDay : Number,
+  changePCTDay : Number,
+  changeHour : Number,
+  changePCTHour : Number,
+  conversionType : String,
+  conversionSymbol : String,
+  supply : Number,
+  MKTCAP : Number,
+  MKTCAPPenalty : Number,
+  circulationSupply : Number,
+  circulationSupplyMKTCAP : Number,
+  totalVolume24H : Number,
+  totalVolume24HTo : Number,
+  totalToptierVolume24H: Number,
+  totalToptierVolume24HTo : Number,
+  imageUrl : String
+});
+var Crypto = mongoose.model('Crypto', cryptoSchema);
 
 const api = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,BNB,LTC,BNB,EOS,TRX,NEO,ADA,XRP,BCH&tsyms=EUR";
 const key = process.env.KEY_API;
