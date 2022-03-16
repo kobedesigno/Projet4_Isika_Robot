@@ -1,1 +1,1 @@
-web: node robots.js
+web: node robot.js
